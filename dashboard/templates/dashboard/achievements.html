@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <h2 class="fw-bold mb-4">Your Achievements</h2>
+    <div class="row g-4">
+        <!-- Example Achievement -->
+        <div class="col-md-4">
+            <div class="card-nebula p-4 text-center h-100 border-start border-4 border-success">
+                <div class="bg-success bg-opacity-25 rounded-circle d-inline-flex p-3 mb-3">
+                    <i class="fa-solid fa-user-astronaut fa-2x text-success"></i>
+                </div>
+                <h5 class="fw-bold">Cadet Joined</h5>
+                <p class="text-secondary small">Joined the platform and started your journey.</p>
+                <span class="badge bg-success">Unlocked</span>
+            </div>
+        </div>
+        <!-- Locked Achievement -->
+        <div class="col-md-4">
+            <div class="card-nebula p-4 text-center h-100 opacity-75">
+                <div class="bg-secondary bg-opacity-25 rounded-circle d-inline-flex p-3 mb-3">
+                    <i class="fa-solid fa-code fa-2x text-secondary"></i>
+                </div>
+                <h5 class="fw-bold text-muted">First Deployment</h5>
+                <p class="text-secondary small">Complete your first course to unlock this badge.</p>
+                <span class="badge bg-secondary">Locked</span>
+            </div>
+        </div>
+    </div>
+    <div class="mt-4">
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-glow rounded-pill">Return to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-center">
+        <div class="col-lg-8" data-aos="fade-up">
+            <div class="card-nebula p-5 position-relative">
+                <span
+                    class="position-absolute top-0 start-50 translate-middle badge bg-primary rounded-pill px-3 py-2 border border-dark shadow-lg">ASSESSMENT
+                    PROTOCOL</span>
+
+                <div class="text-center mb-5 mt-3">
+                    <h2 class="fw-bold mb-2">{{ quiz.title }}</h2>
+                    <p class="text-secondary">Passing Threshold: <span class="text-cyan fw-bold">{{ quiz.pass_score
+                            }}%</span></p>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    {% for question in quiz.questions.all %}
+                    <div class="mb-5 border-bottom border-secondary border-opacity-25 pb-4">
+                        <h5 class="fw-bold mb-3"><span class="text-secondary me-2">0{{ forloop.counter }}.</span> {{
+                            question.text }}</h5>
+
+                        <div class="d-flex flex-column gap-2">
+                            <div class="form-check p-3 rounded bg-dark bg-opacity-25 hover-bg-opacity-50 transition">
+                                <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="A"
+                                    id="q{{ question.id }}_a" required>
+                                <label class="form-check-label w-100 cursor-pointer" for="q{{ question.id }}_a">
+                                    <span class="text-cyan fw-bold me-2">A.</span> {{ question.option_a }}
+                                </label>
+                            </div>
+                            <div class="form-check p-3 rounded bg-dark bg-opacity-25 hover-bg-opacity-50 transition">
+                                <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="B"
+                                    id="q{{ question.id }}_b">
+                                <label class="form-check-label w-100 cursor-pointer" for="q{{ question.id }}_b">
+                                    <span class="text-cyan fw-bold me-2">B.</span> {{ question.option_b }}
+                                </label>
+                            </div>
+                            <div class="form-check p-3 rounded bg-dark bg-opacity-25 hover-bg-opacity-50 transition">
+                                <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="C"
+                                    id="q{{ question.id }}_c">
+                                <label class="form-check-label w-100 cursor-pointer" for="q{{ question.id }}_c">
+                                    <span class="text-cyan fw-bold me-2">C.</span> {{ question.option_c }}
+                                </label>
+                            </div>
+                            <div class="form-check p-3 rounded bg-dark bg-opacity-25 hover-bg-opacity-50 transition">
+                                <input class="form-check-input" type="radio" name="question_{{ question.id }}" value="D"
+                                    id="q{{ question.id }}_d">
+                                <label class="form-check-label w-100 cursor-pointer" for="q{{ question.id }}_d">
+                                    <span class="text-cyan fw-bold me-2">D.</span> {{ question.option_d }}
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <button type="submit" class="btn btn-glow w-100 rounded-pill py-3 fw-bold">Submit
+                        Assessment</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

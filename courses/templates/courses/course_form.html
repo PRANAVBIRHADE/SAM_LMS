@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 py-5">
+    <div class="col-md-6 col-lg-5" data-aos="fade-up">
+        <div class="card-nebula p-4 border-primary border-opacity-25 shadow-lg">
+            <div
+                class="d-flex justify-content-between align-items-center mb-4 border-bottom border-secondary border-opacity-25 pb-3">
+                <h3 class="fw-bold mb-0 text-white">{{ title }}</h3>
+                <i class="fa-solid fa-pen-nib text-primary fa-lg"></i>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {% for field in form %}
+                <div class="mb-4">
+                    <label class="form-label text-secondary small text-uppercase fw-bold">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}
+                    <small class="text-secondary opacity-50 d-block mt-1">{{ field.help_text }}</small>
+                    {% endif %}
+                    {% for error in field.errors %}
+                    <div class="text-danger small mt-1">{{ error }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+
+                <div class="d-flex gap-3 pt-3">
+                    <a href="{% url 'instructor_dashboard' %}"
+                        class="btn btn-outline-secondary rounded-pill px-4">Cancel</a>
+                    <button type="submit" class="btn btn-glow rounded-pill px-5 flex-grow-1">Save Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

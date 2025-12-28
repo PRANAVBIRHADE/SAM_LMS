@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <a href="{% url 'dashboard' %}" class="text-secondary text-decoration-none small mb-2 d-inline-block"><i
+                    class="fa-solid fa-arrow-left me-2"></i> Back to Dashboard</a>
+            <h2 class="fw-bold">Manage Content: {{ course.title }}</h2>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'add_module' course.pk %}" class="btn btn-glow rounded-pill"><i
+                    class="fa-solid fa-plus me-2"></i> Add Module</a>
+            <a href="{% url 'add_quiz' course.pk %}" class="btn btn-outline-glow rounded-pill"><i
+                    class="fa-solid fa-clipboard-question me-2"></i> Add Quiz</a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for module in course.modules.all %}
+        <div class="col-12">
+            <div class="card-nebula p-4 border-start border-4 border-primary">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0 text-white"><span class="text-secondary me-2">Module {{ module.order
+                            }}:</span> {{ module.title }}</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'add_lesson' module.pk %}" class="btn btn-sm btn-outline-glow rounded-pill"><i
+                                class="fa-solid fa-plus me-1"></i> Add Lesson</a>
+                        <a href="{% url 'edit_module' module.pk %}"
+                            class="btn btn-sm btn-outline-secondary rounded-pill"><i class="fa-solid fa-pen"></i></a>
+                    </div>
+                </div>
+
+                <ul class="list-group list-group-flush bg-transparent">
+                    {% for lesson in module.lessons.all %}
+                    <li
+                        class="list-group-item bg-dark bg-opacity-25 border-0 rounded mb-2 d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="fa-solid fa-play-circle text-secondary"></i>
+                            <span class="text-white">{{ lesson.title }}</span>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="{% url 'edit_lesson' lesson.pk %}" class="text-secondary hover-white small"><i
+                                    class="fa-solid fa-pen"></i></a>
+                            <a href="#" class="text-danger small ms-2"><i class="fa-solid fa-trash"></i></a>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item bg-transparent border-0 text-secondary fst-italic ps-0">No lessons in
+                        this module yet.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="card-nebula p-5">
+                <i class="fa-solid fa-layer-group fa-3x text-secondary opacity-25 mb-3"></i>
+                <h4 class="text-secondary">No Content Yet</h4>
+                <p class="text-secondary small">Start by adding a module to organize your course.</p>
+                <a href="{% url 'add_module' course.pk %}" class="btn btn-outline-glow mt-3">Create First Module</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

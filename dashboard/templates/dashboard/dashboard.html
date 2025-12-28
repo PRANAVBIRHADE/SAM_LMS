@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row g-4">
+        <!-- Sidebar (User Profile) -->
+        <div class="col-lg-3">
+            <div class="card-nebula p-4 sticky-top" style="top: 100px;">
+                <div class="text-center mb-4">
+                    <div class="position-relative d-inline-block">
+                        <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=6366f1&color=fff"
+                            class="rounded-circle shadow-lg border border-secondary" width="100">
+                        <span
+                            class="position-absolute bottom-0 end-0 bg-success border border-dark rounded-circle p-2"></span>
+                    </div>
+                    <h5 class="fw-bold mt-3 mb-1">{{ user.username }}</h5>
+                    <div class="mb-2">
+                        <span class="badge bg-warning text-dark rounded-pill shadow-sm animate-pulse">
+                            Level {{ user.level }}
+                        </span>
+                    </div>
+                    <span class="badge bg-dark border border-secondary text-secondary rounded-pill">
+                        {{ user.role|title }}
+                    </span>
+                </div>
+
+                <div class="d-flex justify-content-between text-center mb-4 bg-dark bg-opacity-25 p-3 rounded-3">
+                    <div>
+                        <h6 class="fw-bold mb-0 text-white">{{ enrolled_count }}</h6>
+                        <small class="text-muted" style="font-size: 0.7rem;">ACTIVE</small>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0 text-success">{{ completed_count }}</h6>
+                        <small class="text-muted" style="font-size: 0.7rem;">COMPLETED</small>
+                    </div>
+                    <div>
+                        <h6 class="fw-bold mb-0 text-warning">{{ cert_count }}</h6>
+                        <small class="text-muted" style="font-size: 0.7rem;">CERTS</small>
+                    </div>
+                </div>
+
+                <div class="list-group list-group-flush bg-transparent">
+                    <a href="{% url 'dashboard' %}"
+                        class="list-group-item list-group-item-action bg-transparent text-white border-0 px-0 fw-bold"><i
+                            class="fa-solid fa-gauge me-3 text-primary"></i> Dashboard</a>
+                    <a href="{% url 'course_list' %}"
+                        class="list-group-item list-group-item-action bg-transparent text-secondary border-0 px-0"><i
+                            class="fa-solid fa-compass me-3"></i> My Courses</a>
+                    <a href="{% url 'ai_paths' %}"
+                        class="list-group-item list-group-item-action bg-transparent text-secondary border-0 mb-1">
+                        <i class="fa-solid fa-map-location-dot me-2"></i> Learning Paths
+                    </a> <a href="{% url 'notifications' %}"
+                        class="list-group-item list-group-item-action bg-transparent text-secondary border-0 px-0"><i
+                            class="fa-solid fa-bell me-3"></i> Notifications <span
+                            class="badge bg-danger rounded-pill ms-2">2</span></a>
+                    <a href="{% url 'achievements' %}"
+                        class="list-group-item list-group-item-action bg-transparent text-secondary border-0 px-0"><i
+                            class="fa-solid fa-medal me-3"></i> Achievements</a>
+                    <a href="{% url 'logout' %}"
+                        class="list-group-item list-group-item-action bg-transparent text-secondary border-0 px-0 mt-3 border-top border-secondary pt-3"><i
+                            class="fa-solid fa-arrow-right-from-bracket me-3"></i> Logout</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-9">
+            <!-- Welcome Header -->
+            <div class="d-flex justify-content-between align-items-end mb-4" data-aos="fade-down">
+                <div>
+                    <h2 class="fw-bold mb-1">Mission Control</h2>
+                    <p class="text-secondary mb-0">Welcome back, Cadet. Ready to deploy?</p>
+                </div>
+                <a href="{% url 'daily_checkin' %}" class="btn btn-outline-glow rounded-pill"><i
+                        class="fa-solid fa-calendar-check me-2"></i> Daily
+                    Check-in</a>
+            </div>
+
+            <!-- Recommendations / Stats -->
+            <div class="row g-4 mb-5">
+                <div class="col-md-12">
+                    <h5 class="fw-bold mb-3">Recommended for You</h5>
+                    <div class="row g-3">
+                        {% for course in suggested_courses %}
+                        <div class="col-md-4">
+                            <div class="card-nebula p-3 h-100 border-start border-4 border-warning">
+                                <h6 class="fw-bold mb-2 text-truncate">{{ course.title }}</h6>
+                                <p class="small text-secondary mb-3">{{ course.description|truncatewords:8 }}</p>
+                                <a href="{% url 'course_detail' course.pk %}"
+                                    class="btn btn-sm btn-outline-warning w-100 rounded-pill">View Course</a>
+                            </div>
+                        </div>
+                        {% empty %}
+                        <div class="col-12">
+                            <p class="text-secondary small fst-italic">No new courses available right now.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Paths -->
+            {% if active_paths %}
+            <div class="mb-5">
+                <h5 class="fw-bold mb-4">Active Learning Paths</h5>
+                <div class="row g-4">
+                    {% for user_path in active_paths %}
+                    <div class="col-md-6">
+                        <div class="card-nebula p-4 border-start border-4 border-info">
+                            <h5 class="fw-bold mb-2">{{ user_path.path.title }}</h5>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small class="text-secondary">Progress</small>
+                                <small class="text-info fw-bold">{{ user_path.progress }}%</small>
+                            </div>
+                            <div class="progress bg-dark" style="height: 6px;">
+                                <div class="progress-bar bg-info" role="progressbar"
+                                    style="width: {{ user_path.progress }}%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Recent Courses -->
+            <h5 class="fw-bold mb-4">Continue Learning</h5>
+            <div class="row g-4">
+                {% for enrollment in enrollments %}
+                <div class="col-md-12" data-aos="fade-up">
+                    <div class="card-nebula p-0 overflow-hidden">
+                        <div class="row g-0">
+                            <div
+                                class="col-md-2 bg-dark bg-opacity-50 d-flex align-items-center justify-content-center">
+                                <i class="fa-solid fa-code fa-3x text-secondary opacity-50"></i>
+                            </div>
+                            <div class="col-md-10">
+                                <div class="card-body p-4">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="card-title fw-bold">{{ enrollment.course.title }}</h5>
+                                        <span
+                                            class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">
+                                            {{ enrollment.progress }}% Synced
+                                        </span>
+                                    </div>
+                                    <div class="progress bg-dark mb-3" style="height: 6px;">
+                                        <div class="progress-bar bg-gradient-primary"
+                                            style="width: {{ enrollment.progress|default:'0' }}%"></div>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-secondary">
+                                            <i class="fa-regular fa-clock me-1"></i>
+                                            {{ enrollment.course.updated_at|timesince }} ago
+                                        </small>
+                                        {% if enrollment.progress == 100 %}
+                                        <a href="{% url 'generate_certificate' enrollment.course.pk %}"
+                                            class="btn btn-sm btn-glow rounded-pill px-4"><i
+                                                class="fa-solid fa-certificate me-2"></i> Certificate</a>
+                                        {% else %}
+                                        <a href="{% url 'course_detail' enrollment.course.pk %}"
+                                            class="btn btn-sm btn-outline-glow rounded-pill px-4">Continue</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="col-12 text-center py-5">
+                    <div class="card-nebula p-5">
+                        <i class="fa-solid fa-satellite-dish fa-3x text-secondary opacity-25 mb-3"></i>
+                        <h4 class="text-secondary">No Active Missions</h4>
+                        <a href="{% url 'course_list' %}" class="btn btn-glow rounded-pill mt-3">Explore Database</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

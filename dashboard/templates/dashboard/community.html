@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 d-none d-md-block">
+            <div class="card-nebula p-3 mb-4">
+                <h6 class="fw-bold text-secondary mb-3">CHANNELS</h6>
+                <ul class="nav flex-column gap-2">
+                    {% for channel in channels %}
+                    <li class="nav-item">
+                        <a href="{% url 'community_channel' channel.slug %}"
+                            class="nav-link {% if channel.slug == active_channel.slug %}active bg-primary bg-opacity-25 text-white rounded{% else %}text-secondary hover-white{% endif %}">
+                            <i class="fa-solid fa-hashtag me-2"></i> {{ channel.name }}
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="col-md-9">
+            <div class="card-nebula p-0 overflow-hidden d-flex flex-column" style="height: 70vh;">
+                <!-- Header -->
+                <div
+                    class="p-3 border-bottom border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold"><i class="fa-solid fa-hashtag text-secondary me-2"></i>{{
+                        active_channel.name }}</h5>
+                    <div class="d-flex align-items-center text-secondary small">
+                        <span class="me-3"><i class="fa-solid fa-circle text-success me-1" style="font-size: 8px;"></i>
+                            Online</span>
+                        <i class="fa-solid fa-users"></i>
+                    </div>
+                </div>
+
+                <!-- Messages -->
+                <div id="chat-messages" class="flex-grow-1 p-4 overflow-auto custom-scrollbar">
+                    {% for message in messages %}
+                    <div class="d-flex gap-3 mb-4 message-item" data-id="{{ message.id }}">
+                        <img src="https://ui-avatars.com/api/?name={{ message.author.username }}&background=random"
+                            class="rounded-circle" width="40" height="40">
+                        <div>
+                            <div class="d-flex align-items-baseline gap-2">
+                                <h6 class="fw-bold mb-0 text-white">{{ message.author.username }}</h6>
+                                <small class="text-secondary" style="font-size: 0.7rem;">{{ message.timestamp|date:"H:i
+                                    A" }}</small>
+                            </div>
+                            <p class="text-secondary mb-0">{{ message.content }}</p>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="text-center mt-5 opacity-50">
+                        <i class="fa-regular fa-comments fa-3x mb-3"></i>
+                        <p>No messages yet. Be the first to say hello!</p>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Input -->
+                <div class="p-3 border-top border-secondary border-opacity-25 bg-dark bg-opacity-25">
+                    <form id="message-form" class="input-group">
+                        <button type="button" class="btn btn-link text-secondary"><i
+                                class="fa-solid fa-plus-circle fa-lg"></i></button>
+                        <input type="text" id="message-input" class="form-control bg-transparent border-0 text-white"
+                            placeholder="Message #{{ active_channel.name }}" autocomplete="off">
+                        <button type="submit" class="btn btn-link text-primary"><i
+                                class="fa-solid fa-paper-plane"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const box = document.getElementById('chat-messages');
+    box.scrollTop = box.scrollHeight;
+
+    const form = document.getElementById('message-form');
+    const input = document.getElementById('message-input');
+    const channelSlug = "{{ active_channel.slug }}";
+    let lastId = "{{ last_message_id }}";
+
+    // Send Message
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const content = input.value.trim();
+        if (!content) return;
+
+        input.value = ''; // clear immediately for better UX
+
+        try {
+            const res = await fetch(`/dashboard/community/${channelSlug}/send/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ content })
+            });
+            const data = await res.json();
+            if (data.status === 'ok') {
+                appendMessage(data.message);
+                lastId = data.message.id;
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    });
+
+    // Append Message to DOM
+    function appendMessage(msg) {
+        const div = document.createElement('div');
+        div.className = 'd-flex gap-3 mb-4 message-item';
+        div.setAttribute('data-id', msg.id);
+        div.innerHTML = `
+            <img src="https://ui-avatars.com/api/?name=${msg.author}&background=random" class="rounded-circle" width="40" height="40">
+            <div>
+                <div class="d-flex align-items-baseline gap-2">
+                    <h6 class="fw-bold mb-0 text-white">${msg.author}</h6>
+                    <small class="text-secondary" style="font-size: 0.7rem;">${msg.timestamp}</small>
+                </div>
+                <p class="text-secondary mb-0">${msg.content}</p>
+            </div>
+        `;
+        // Remove "No messages" placeholder if it exists
+        if (box.children.length === 1 && box.children[0].classList.contains('text-center')) {
+            box.innerHTML = '';
+        }
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    // Polling for new messages
+    setInterval(async () => {
+        try {
+            const res = await fetch(`/dashboard/community/${channelSlug}/messages/?after_id=${lastId}`);
+            const data = await res.json();
+            if (data.messages && data.messages.length > 0) {
+                data.messages.forEach(msg => {
+                    appendMessage(msg);
+                    lastId = msg.id;
+                });
+            }
+        } catch (err) {
+            console.error('Polling error:', err);
+        }
+    }, 3000); // Poll every 3 seconds
+</script>
+{% endblock %}

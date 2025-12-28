@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-center">
+            <div>
+                <h6 class="text-danger fw-bold small">COMMAND CENTER</h6>
+                <h2 class="fw-bold display-6">Admin Overview</h2>
+            </div>
+            <div class="d-flex gap-2">
+                <a href="{% url 'create_course' %}" class="btn btn-glow rounded-pill"><i
+                        class="fa-solid fa-plus me-2"></i> Create Course</a>
+                <a href="{% url 'manage_users' %}" class="btn btn-outline-glow rounded-pill"><i
+                        class="fa-solid fa-users-gear me-2"></i> Manage Users</a>
+                <a href="{% url 'export_users_csv' %}" class="btn btn-outline-secondary rounded-pill"><i
+                        class="fa-solid fa-download me-2"></i>
+                    Export</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Row -->
+    <div class="row g-4 mb-5">
+        <div class="col-md-3">
+            <div class="card-nebula p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-secondary">Total Users</span>
+                    <i class="fa-solid fa-users text-primary"></i>
+                </div>
+                <h2 class="fw-bold mb-0">{{ total_users }}</h2>
+                <small class="text-success"><i class="fa-solid fa-arrow-up"></i> 12% vs last week</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-nebula p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-secondary">Active Instructors</span>
+                    <i class="fa-solid fa-chalkboard-user text-warning"></i>
+                </div>
+                <h2 class="fw-bold mb-0">{{ total_instructors }}</h2>
+                <small class="text-secondary">Teaching {{ total_courses }} courses</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-nebula p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-secondary">Total Courses</span>
+                    <i class="fa-solid fa-layer-group text-cyan"></i>
+                </div>
+                <h2 class="fw-bold mb-0">{{ total_courses }}</h2>
+                <small class="text-secondary">Across 5 categories</small>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card-nebula p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-secondary">Total Enrollments</span>
+                    <i class="fa-solid fa-graduation-cap text-success"></i>
+                </div>
+                <h2 class="fw-bold mb-0">{{ total_enrollments }}</h2>
+                <small class="text-success"><i class="fa-solid fa-user-plus"></i> All time</small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Recent Users -->
+        <div class="col-md-6">
+            <div class="card-nebula p-4 h-100">
+                <h5 class="fw-bold mb-4">New Recruits</h5>
+                <div class="table-responsive">
+                    <table class="table table-dark table-hover bg-transparent">
+                        <thead>
+                            <tr class="text-secondary small text-uppercase">
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Joined</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="bg-primary rounded-circle" style="width: 8px; height: 8px;"></div>
+                                        {{ user.username }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {% if user.role == 'admin' %}<span class="badge bg-danger">Admin</span>
+                                    {% elif user.role == 'instructor' %}<span
+                                        class="badge bg-warning text-dark">Instructor</span>
+                                    {% else %}<span class="badge bg-secondary">Student</span>{% endif %}
+                                </td>
+                                <td class="text-secondary small">{{ user.date_joined|date:"M d" }}</td>
+                                <td class="text-end">
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-link text-secondary" type="button"
+                                            data-bs-toggle="dropdown">
+                                            <i class="fa-solid fa-ellipsis-vertical"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                                            <li><a class="dropdown-item" href="#"><i
+                                                        class="fa-solid fa-pen-to-square me-2"></i> Edit</a></li>
+                                            <li>
+                                                <hr class="dropdown-divider">
+                                            </li>
+                                            <li><a class="dropdown-item text-danger"
+                                                    href="{% url 'delete_user' user.id %}"
+                                                    onclick="return confirm('Are you sure you want to delete this user?')"><i
+                                                        class="fa-solid fa-trash me-2"></i> Delete</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center text-muted">No users found.</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Platform Activity (Placeholder) -->
+        <div class="col-md-6">
+            <div class="card-nebula p-4 h-100">
+                <h5 class="fw-bold mb-4">Recent Courses</h5>
+                <div class="d-flex flex-column gap-3">
+                    {% for course in courses %}
+                    <div class="d-flex justify-content-between align-items-center p-3 rounded bg-dark bg-opacity-50">
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="bg-primary bg-opacity-25 p-2 rounded">
+                                <i class="fa-solid fa-book text-primary"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">{{ course.title }}</h6>
+                                <small class="text-secondary">by {{ course.instructor.username }}</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-secondary bg-opacity-20 text-secondary">{{ course.modules_count }}
+                            Modules</span>
+                    </div>
+                    {% empty %}
+                    <p class="text-secondary text-center my-4">No courses deployed yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5 align-items-end" data-aos="fade-up">
+        <div class="col-md-8">
+            <h6 class="text-cyan fw-bold mb-2">EXPLORE THE UNIVERSE</h6>
+            <h2 class="fw-bold display-5">Course Catalog</h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <div class="input-group">
+                <input type="text" class="form-control bg-dark border-secondary text-white"
+                    placeholder="Search modules...">
+                <button class="btn btn-outline-secondary"><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        {% for course in courses %}
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+            <div class="card-nebula h-100 overflow-hidden group">
+                <div class="position-relative">
+                    {% if course.thumbnail %}
+                    <img src="{{ course.thumbnail.url }}"
+                        class="card-img-top opacity-75 transition-opacity hover-opacity-100" alt="{{ course.title }}"
+                        style="height: 200px; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-dark bg-gradient d-flex align-items-center justify-content-center"
+                        style="height: 200px;">
+                        <i class="fa-solid fa-code-branch fa-4x text-secondary opacity-25"></i>
+                    </div>
+                    {% endif %}
+                    <span
+                        class="position-absolute top-0 end-0 m-3 badge bg-dark bg-opacity-75 backdrop-blur border border-secondary">
+                        {{ course.modules_count }} Modules
+                    </span>
+                </div>
+
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="mb-3">
+                        <small class="text-cyan fw-bold text-uppercase">Development</small>
+                        <h5 class="card-title fw-bold mt-1 text-white">{{ course.title }}</h5>
+                    </div>
+                    <p class="card-text text-secondary small flex-grow-1">{{ course.description|truncatewords:20 }}</p>
+
+                    <div
+                        class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top border-secondary border-opacity-25">
+                        <div class="d-flex align-items-center gap-2">
+                            <img src="https://ui-avatars.com/api/?name={{ course.instructor.username }}&background=random"
+                                class="rounded-circle" width="30">
+                            <small class="text-secondary">{{ course.instructor.username }}</small>
+                        </div>
+                        <a href="{% url 'course_detail' course.pk %}"
+                            class="btn btn-sm btn-outline-glow rounded-pill px-3">View Intel <i
+                                class="fa-solid fa-arrow-right ms-1"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-secondary">No courses found in this sector.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

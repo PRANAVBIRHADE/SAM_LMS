@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <a href="{% url 'admin_dashboard' %}"
+                class="text-secondary text-decoration-none small mb-2 d-inline-block"><i
+                    class="fa-solid fa-arrow-left me-2"></i> Back to Dashboard</a>
+            <h2 class="fw-bold">Manage Users</h2>
+        </div>
+        <div class="input-group" style="max-width: 300px;">
+            <input type="text" class="form-control bg-dark border-secondary text-white" placeholder="Search users...">
+            <button class="btn btn-outline-secondary"><i class="fa-solid fa-magnifying-glass"></i></button>
+        </div>
+    </div>
+
+    <div class="card-nebula p-0 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover bg-transparent mb-0">
+                <thead class="bg-dark bg-opacity-50">
+                    <tr class="text-secondary small text-uppercase">
+                        <th class="ps-4">User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Joined</th>
+                        <th class="text-end pe-4">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="align-middle">
+                    {% for u in users %}
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="https://ui-avatars.com/api/?name={{ u.username }}&background=6366f1&color=fff"
+                                    class="rounded-circle" width="32">
+                                <span class="fw-bold">{{ u.username }}</span>
+                            </div>
+                        </td>
+                        <td class="text-secondary">{{ u.email }}</td>
+                        <td>
+                            {% if u.role == 'admin' %}<span class="badge bg-danger">Admin</span>
+                            {% elif u.role == 'instructor' %}<span class="badge bg-warning text-dark">Instructor</span>
+                            {% else %}<span class="badge bg-secondary">Student</span>{% endif %}
+                        </td>
+                        <td>
+                            {% if u.is_active %}
+                            <span
+                                class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25">Active</span>
+                            {% else %}
+                            <span
+                                class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25">Banned</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-secondary small">{{ u.date_joined|date:"M d, Y" }}</td>
+                        <td class="text-end pe-4">
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-link text-secondary" data-bs-toggle="dropdown"><i
+                                        class="fa-solid fa-ellipsis"></i></button>
+                                <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="#"><i class="fa-solid fa-user-pen me-2"></i>
+                                            Edit</a></li>
+                                    <li><a class="dropdown-item" href="#"><i class="fa-solid fa-shield-halved me-2"></i>
+                                            Change Role</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item text-danger" href="{% url 'delete_user' u.pk %}"
+                                            onclick="return confirm('Authorized personnel only. Confirm deletion of user {{ u.username }}?')"><i
+                                                class="fa-solid fa-trash me-2"></i> Delete User</a></li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

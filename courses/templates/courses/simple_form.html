@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100 py-5">
+    <div class="col-md-5 col-lg-4" data-aos="fade-up">
+        <div class="card-nebula p-4 border-primary border-opacity-25 shadow-lg">
+            <div class="mb-4 text-center">
+                <h4 class="fw-bold mb-1">{{ title }}</h4>
+                <div class="h-1 w-25 bg-primary mx-auto rounded mt-2"></div>
+            </div>
+
+            <form method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="mb-3">
+                    <label class="form-label text-secondary small text-uppercase fw-bold">{{ field.label }}</label>
+                    {{ field }}
+                </div>
+                {% endfor %}
+
+                <div class="d-flex gap-2 mt-4">
+                    <button type="submit" class="btn btn-glow w-100 rounded-pill">Save</button>
+                    <a href="javascript:history.back()" class="btn btn-outline-secondary w-100 rounded-pill">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

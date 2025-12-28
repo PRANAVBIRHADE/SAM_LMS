@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid h-100 p-0">
+    <div class="d-flex flex-column flex-lg-row h-100">
+        <!-- Sidebar Navigation -->
+        <div class="col-lg-3 bg-surface border-end border-glass d-none d-lg-flex flex-column"
+            style="background: var(--bg-surface); height: calc(100vh - 76px); position: sticky; top: 76px;">
+            <div class="p-4 border-bottom border-glass">
+                <h6 class="text-secondary text-uppercase small fw-bold mb-2">Current Module</h6>
+                <h5 class="fw-bold text-white mb-0 text-truncate">{{ lesson.module.title }}</h5>
+            </div>
+
+            <div class="flex-grow-1 overflow-auto custom-scrollbar p-3">
+                {% for module in course.modules.all %}
+                <div class="mb-4">
+                    <h6 class="text-cyan px-3 mb-2 small fw-bold border-start border-cyan border-2 ps-2">{{ module.order
+                        }}. {{ module.title }}</h6>
+                    <ul class="list-unstyled">
+                        {% for l in module.lessons.all %}
+                        <li>
+                            <a href="{% url 'lesson_detail' course.pk l.pk %}"
+                                class="d-flex align-items-center px-3 py-2 rounded mb-1 text-decoration-none {% if l.pk == lesson.pk %}bg-primary bg-opacity-25 text-white fw-bold border border-primary border-opacity-25{% else %}text-secondary hover-white{% endif %}">
+                                {% if l.pk == lesson.pk %}
+                                <i class="fa-solid fa-play me-2 text-primary small"></i>
+                                {% else %}
+                                <i class="fa-regular fa-circle me-2 opacity-50 small"></i>
+                                {% endif %}
+                                <span class="text-truncate">{{ l.title }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="col-lg-9 p-0 bg-void d-flex flex-column" style="min-height: calc(100vh - 76px);">
+            <!-- Video/Content Player -->
+            <div class="ratio ratio-16x9 bg-black border-bottom border-glass shadow-lg">
+                {% if lesson.video_url %}
+                <iframe src="{{ lesson.video_url }}" title="{{ lesson.title }}" allowfullscreen></iframe>
+                {% else %}
+                <div class="d-flex align-items-center justify-content-center h-100 flex-column">
+                    <i class="fa-brands fa-markdown fa-4x text-secondary opacity-25 mb-3"></i>
+                    <h3 class="text-secondary fw-bold">Text-Based Lesson</h3>
+                    <p class="text-secondary opacity-50">Read the documentation below to proceed.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Lesson Details -->
+            <div class="container p-4 p-lg-5">
+                <div class="d-flex justify-content-between align-items-start mb-4 border-bottom border-glass pb-4">
+                    <div>
+                        <h1 class="fw-bold mb-2">{{ lesson.title }}</h1>
+                        <p class="text-secondary mb-0">Module {{ lesson.module.order }} • Lesson {{ lesson.order }}</p>
+                    </div>
+                    <div class="d-flex gap-2">
+                        {% if lesson.pk > 1 %}
+                        <!-- Previous button logic could go here -->
+                        {% endif %}
+                        <form method="POST">
+                            {% csrf_token %}
+                            <button type="submit" name="mark_complete"
+                                class="btn btn-outline-success rounded-pill px-4"><i class="fa-solid fa-check me-2"></i>
+                                Mark Complete</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="lesson-content text-secondary lh-lg mb-5" style="max-width: 800px;">
+                    {% if lesson.content %}
+                    {{ lesson.content|linebreaks }}
+                    {% else %}
+                    <p class="fst-italic opacity-50">No additional text content provided for this lesson.</p>
+                    {% endif %}
+                </div>
+
+                <div class="d-flex justify-content-between pt-4 border-top border-glass">
+                    <button class="btn btn-outline-secondary rounded-pill px-4" disabled>Previous</button>
+                    <button class="btn btn-glow rounded-pill px-4">Next Lesson <i
+                            class="fa-solid fa-arrow-right ms-2"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <a href="{% url 'course_list' %}"
+        class="text-secondary text-decoration-none small mb-4 d-inline-block hover-white"><i
+            class="fa-solid fa-arrow-left me-2"></i> Back to Fleet</a>
+
+    <div class="row g-5">
+        <!-- Course Info -->
+        <div class="col-lg-8" data-aos="fade-right">
+            <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 mb-3">NEW
+                ARRIVAL</span>
+            <h1 class="fw-bold display-4 mb-3">{{ course.title }}</h1>
+            <p class="lead text-secondary mb-4">{{ course.description }}</p>
+
+            <div class="d-flex gap-4 mb-5 text-secondary border-bottom border-secondary border-opacity-25 pb-4">
+                <span><i class="fa-solid fa-user-astronaut me-2"></i> {{ course.instructor.username }}</span>
+                <span><i class="fa-solid fa-layer-group me-2"></i> {{ course.modules.count }} Modules</span>
+                <span><i class="fa-solid fa-signal me-2"></i> Beginner Friendly</span>
+            </div>
+
+            <h4 class="fw-bold mb-4">Transmission Log (Curriculum)</h4>
+            <div class="accordion accordion-flush" id="accordionCurriculum">
+                {% for module in course.modules.all %}
+                <div class="accordion-item bg-transparent border-bottom border-secondary border-opacity-25">
+                    <h2 class="accordion-header" id="heading{{ module.pk }}">
+                        <button class="accordion-button collapsed bg-transparent text-white fw-bold shadow-none"
+                            type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ module.pk }}">
+                            <!-- Debug: version 3 -->
+                            <span class="text-cyan me-3">{{ module.order }}.</span> {{ module.title }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{ module.pk }}" class="accordion-collapse collapse"
+                        data-bs-parent="#accordionCurriculum">
+                        <div class="accordion-body pt-0 pb-4 ps-5">
+                            <ul class="list-unstyled mb-0 border-start border-secondary border-opacity-25 ms-2 ps-4">
+                                {% for lesson in module.lessons.all %}
+                                <li class="mb-3 position-relative">
+                                    <a href="{% url 'lesson_detail' course.pk lesson.pk %}"
+                                        class="text-decoration-none d-flex align-items-center justify-content-between group">
+                                        <div class="d-flex align-items-center text-secondary hover-white transition">
+                                            <i class="fa-regular fa-circle-play me-3"></i> {{ lesson.title }}
+                                        </div>
+                                        <i
+                                            class="fa-solid fa-arrow-right opacity-0 group-hover-opacity-100 text-primary transition"></i>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-secondary">No modules uplinked.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4" data-aos="fade-left">
+            <div class="card-nebula p-4 sticky-top" style="top: 100px;">
+                <div class="text-center mb-4">
+                    {% if is_enrolled %}
+                    <h2 class="fw-bold text-success mb-0">ENROLLED</h2>
+                    <small class="text-secondary">Access Granted</small>
+                    {% else %}
+                    <h2 class="fw-bold text-gradient mb-0">${{ course.price }}</h2>
+                    <small class="text-secondary">One-time access fee</small>
+                    {% endif %}
+                </div>
+
+                {% if is_enrolled %}
+                <a href="#" class="btn btn-success w-100 rounded-pill py-3 mb-3 fw-bold shadow-lg">Continue Learning</a>
+                {% else %}
+                <a href="{% url 'enroll' course.pk %}"
+                    class="btn btn-glow w-100 rounded-pill py-3 mb-3 fw-bold shadow-lg">Init Access</a>
+                <button class="btn btn-outline-glow w-100 rounded-pill py-3 mb-4 fw-bold">Add to Wishlist</button>
+                {% endif %}
+
+                <div class="text-secondary small space-y-3">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <i class="fa-solid fa-laptop-code text-cyan"></i>
+                        <span>Browser-based IDE included</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <i class="fa-solid fa-infinity text-cyan"></i>
+                        <span>Lifetime updates</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <i class="fa-solid fa-certificate text-cyan"></i>
+                        <span>Neural Certificate upon completion</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

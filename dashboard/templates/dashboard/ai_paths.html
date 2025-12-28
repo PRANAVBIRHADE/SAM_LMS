@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center mb-5" data-aos="fade-down">
+        <h6 class="text-secondary fw-bold text-uppercase">Guided Roadmaps</h6>
+        <h2 class="display-4 fw-bold">Learning Paths</h2>
+        <p class="lead text-secondary">Choose your specialization and follow the path to mastery.</p>
+    </div>
+
+    <div class="row g-4">
+        {% for path in paths %}
+        <div class="col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:1 }}00">
+            <div
+                class="card-nebula p-5 h-100 position-relative border-start border-4 {% if forloop.counter|divisibleby:2 %}border-warning{% else %}border-primary{% endif %}">
+                <span
+                    class="badge {% if forloop.counter|divisibleby:2 %}bg-warning text-dark{% else %}bg-primary{% endif %} rounded-pill mb-3">Career
+                    Track</span>
+                <h3 class="fw-bold mb-3">{{ path.title }}</h3>
+                <p class="text-secondary mb-4">{{ path.description }}</p>
+
+                <div class="timeline border-start border-secondary border-opacity-25 ms-3 ps-4 mb-4">
+                    {% for course in path.courses.all %}
+                    <div class="mb-4 position-relative">
+                        <span
+                            class="position-absolute start-0 top-0 translate-middle-x {% if forloop.counter|divisibleby:2 %}bg-secondary{% else %}bg-primary{% endif %} rounded-circle"
+                            style="width: 12px; height: 12px; left: -1.75rem;"></span>
+                        <h6 class="fw-bold text-white">{{ course.title }}</h6>
+                        <small class="text-secondary">{{ course.modules.count }} Modules • {{ course.price }}</small>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <a href="{% url 'join_path' path.pk %}" class="btn btn-outline-glow rounded-pill w-100">Start Path</a>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p class="text-secondary">No learning paths defined yet.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

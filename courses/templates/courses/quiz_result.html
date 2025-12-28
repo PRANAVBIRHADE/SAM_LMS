@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5 min-vh-100 d-flex align-items-center justify-content-center">
+    <div class="col-md-6 text-center" data-aos="zoom-in">
+        <div class="card-nebula p-5 position-relative overflow-hidden">
+            <!-- Background Glow -->
+            <div class="position-absolute top-50 start-50 translate-middle rounded-circle {% if passed %}bg-success{% else %}bg-danger{% endif %} opacity-20 blur-3xl"
+                style="width: 300px; height: 300px; z-index: 0;"></div>
+
+            <div class="position-relative z-1">
+                {% if passed %}
+                <div class="d-inline-flex bg-success bg-opacity-20 text-success p-4 rounded-circle mb-4">
+                    <i class="fa-solid fa-trophy fa-3x"></i>
+                </div>
+                <h2 class="fw-bold mb-2">Assessment Cleared!</h2>
+                <p class="text-secondary mb-4">Excellent work, cadet. Your knowledge is verified.</p>
+                {% else %}
+                <div class="d-inline-flex bg-danger bg-opacity-20 text-danger p-4 rounded-circle mb-4">
+                    <i class="fa-solid fa-circle-xmark fa-3x"></i>
+                </div>
+                <h2 class="fw-bold mb-2">Assessment Failed</h2>
+                <p class="text-secondary mb-4">You need {{ quiz.pass_score }}% to pass. Review the material and try
+                    again.</p>
+                {% endif %}
+
+                <h1 class="display-1 fw-bold {% if passed %}text-success{% else %}text-danger{% endif %} mb-4">{{
+                    percentage }}%</h1>
+
+                <div class="row g-3 mb-4">
+                    <div class="col-6">
+                        <div class="bg-dark bg-opacity-50 p-3 rounded">
+                            <small class="text-secondary d-block text-uppercase fw-bold"
+                                style="font-size: 0.7rem;">Correct</small>
+                            <span class="fs-4 fw-bold text-white">{{ score }}</span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bg-dark bg-opacity-50 p-3 rounded">
+                            <small class="text-secondary d-block text-uppercase fw-bold"
+                                style="font-size: 0.7rem;">Total</small>
+                            <span class="fs-4 fw-bold text-white">{{ total }}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="{% url 'course_detail' quiz.course.pk %}" class="btn btn-outline-glow rounded-pill px-5">Return
+                    to Course</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

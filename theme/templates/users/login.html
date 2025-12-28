@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="d-flex align-items-center justify-content-center min-vh-100">
+    <div class="col-md-5 col-lg-4" data-aos="zoom-in">
+        <div class="card-nebula p-5 position-relative overflow-hidden">
+            <!-- Glow Effect -->
+            <div class="position-absolute top-0 end-0 translate-middle rounded-circle bg-primary opacity-20 blur-3xl p-5"
+                style="z-index: 0;"></div>
+
+            <div class="position-relative z-1">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold">Sign In</h3>
+                    <p class="text-secondary">Access your terminal</p>
+                </div>
+
+                <form method="POST">
+                    {% csrf_token %}
+
+                    {% if form.errors %}
+                    <div class="alert alert-danger bg-danger bg-opacity-10 border-danger text-danger border small">
+                        Invalid credentials. Pleaase try again.
+                    </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small text-uppercase fw-bold">Username</label>
+                        {{ form.username }}
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label text-secondary small text-uppercase fw-bold">Password</label>
+                        {{ form.password }}
+                    </div>
+
+                    <button type="submit" class="btn btn-glow w-100 rounded-pill py-2">Authenticate</button>
+
+                    <div class="text-center mt-4">
+                        <a href="{% url 'register' %}"
+                            class="text-secondary text-decoration-none small hover-white">Initialize New Account</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

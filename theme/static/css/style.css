@@ -1,0 +1,194 @@
+/* Nebula Theme - SAM LMS */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg-void: #0B0E14;
+    --bg-surface: #151B28;
+    --bg-card: rgba(30, 41, 59, 0.7);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --secondary-glow: #06b6d4;
+    --border-glass: rgba(255, 255, 255, 0.1);
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-void);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    padding-top: 76px;
+    /* Navbar height */
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.font-heading {
+    font-family: 'Space Grotesk', sans-serif;
+    color: white;
+}
+
+/* Navbar */
+.navbar-nebula {
+    background: rgba(11, 14, 20, 0.8);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-glass);
+}
+
+.navbar-brand {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: white !important;
+}
+
+.nav-link {
+    color: var(--text-secondary) !important;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+    color: white !important;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* Buttons */
+.btn-glow {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    transition: transform 0.3s;
+    font-weight: 600;
+}
+
+.btn-glow::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--primary-gradient);
+    filter: blur(15px);
+    z-index: -1;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.btn-glow:hover {
+    transform: translateY(-2px);
+    color: white;
+}
+
+.btn-glow:hover::before {
+    opacity: 1;
+}
+
+.btn-outline-glow {
+    background: transparent;
+    border: 1px solid rgba(168, 85, 247, 0.5);
+    color: white;
+    transition: all 0.3s;
+}
+
+.btn-outline-glow:hover {
+    background: rgba(168, 85, 247, 0.1);
+    border-color: #a855f7;
+    color: white;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+}
+
+/* Cards & Glassmorphism */
+.card-nebula {
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-glass);
+    border-radius: 16px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card-nebula:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.3);
+    border-color: rgba(99, 102, 241, 0.3);
+}
+
+/* Utilities */
+.text-gradient {
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: bold;
+}
+
+.text-cyan {
+    color: var(--secondary-glow);
+}
+
+/* Form Controls Dark Mode */
+.form-control,
+.form-select {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-glass);
+    color: white;
+}
+
+.form-control:focus,
+.form-select:focus {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: #6366f1;
+    color: white;
+    box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+}
+
+.form-control::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* Animations */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.anim-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-void);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+}

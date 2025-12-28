@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Certificate of Completion</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Great+Vibes&family=Space+Grotesk:wght@300;700&display=swap');
+
+        body {
+            background-color: #0B0E14;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .certificate-container {
+            width: 900px;
+            height: 600px;
+            background: radial-gradient(circle at center, #151B28 0%, #0B0E14 100%);
+            border: 2px solid #6366f1;
+            position: relative;
+            padding: 50px;
+            box-shadow: 0 0 50px rgba(99, 102, 241, 0.3);
+            text-align: center;
+        }
+
+        .border-deco {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-size: 2rem;
+            margin-bottom: 40px;
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            color: #f8fafc;
+        }
+
+        .presented-to {
+            font-size: 1.2rem;
+            color: #94a3b8;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .recipient-name {
+            font-family: 'Great Vibes', cursive;
+            font-size: 5rem;
+            color: #06b6d4;
+            margin-bottom: 30px;
+            text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
+        }
+
+        .course-title {
+            font-size: 1.5rem;
+            margin-bottom: 60px;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 50px;
+        }
+
+        .signature {
+            border-top: 1px solid #6366f1;
+            padding-top: 10px;
+            width: 200px;
+        }
+
+        .date {
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+
+        @media print {
+            body {
+                background: white;
+                -webkit-print-color-adjust: exact;
+            }
+
+            .certificate-container {
+                box-shadow: none;
+                border: 5px solid #000;
+                background: white;
+                color: black;
+            }
+
+            .recipient-name {
+                color: #000;
+                text-shadow: none;
+            }
+
+            .logo {
+                background: none;
+                color: black;
+                -webkit-text-fill-color: black;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="certificate-container">
+        <div class="border-deco"></div>
+
+        <div class="logo">SAM LMS NEBULA</div>
+
+        <h1>CERTIFICATE OF MASTERY</h1>
+
+        <p class="presented-to">This artifact is presented to</p>
+
+        <div class="recipient-name">{{ certificate.user.username }}</div>
+
+        <p>For successfully completing the neural uplift program:</p>
+        <div class="course-title">{{ certificate.course.title }}</div>
+
+        <div class="footer">
+            <div class="signature">
+                <p style="font-family: 'Great Vibes'; font-size: 2rem; margin: 0;">Sam Admin</p>
+                <small>Lead Instructor</small>
+            </div>
+
+            <div class="date">
+                <p>ID: {{ certificate.certificate_id }}</p>
+                <p>Issued: {{ certificate.issued_at|date:"F d, Y" }}</p>
+            </div>
+        </div>
+
+        <button onclick="window.print()"
+            style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 10px 20px; background: #6366f1; color: white; border: none; border-radius: 5px; cursor: pointer;"
+            class="no-print">Download Verification</button>
+    </div>
+
+    <style>
+        @media print {
+            .no-print {
+                display: none;
+            }
+        }
+    </style>
+</body>
+
+</html>
